@@ -1,14 +1,10 @@
 'use strict';
 
 module.exports = {
-  up: async (queryInterface, Sequelize) => {
-    const { INTEGER, DATE, STRING } = Sequelize;
-    await queryInterface.createTable('users', {
-      id: {
-        type: INTEGER,
-        primaryKey: true,
-        autoIncrement: true,
-      },
+  up: (queryInterface, Sequelize) => {
+    const { STRING, INTEGER, DATE } = Sequelize;
+    return queryInterface.createTable('users', {
+      id: { type: INTEGER, primaryKey: true, autoIncrement: true },
       nick_name: {
         type: STRING(30),
         allowNull: false,
@@ -25,21 +21,18 @@ module.exports = {
         type: DATE,
         defaultValue: () => new Date(),
       },
-      level: {
-        type: INTEGER,
-        defaultValue: () => 0,
-      },
       updated_at: {
         type: DATE,
         defaultValue: () => new Date(),
       },
-      avatar: {
-        type: STRING,
+      level: {
+        type: INTEGER,
+        defaultValue: () => 0,
       },
     });
   },
 
-  down: (queryInterface, Sequelize) => {
+  down: queryInterface => {
     /*
       Add reverting commands here.
       Return a promise to correctly handle asynchronicity.
@@ -47,5 +40,6 @@ module.exports = {
       Example:
       return queryInterface.dropTable('users');
     */
+    return queryInterface.dropTable('users');
   },
 };

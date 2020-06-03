@@ -14,6 +14,7 @@ module.exports = appInfo => {
     security: {
       csrf: {
         enable: false,
+        ignoreJSON: true,
       },
     },
   };
@@ -23,6 +24,15 @@ module.exports = appInfo => {
 
   // add your middleware config here
   config.middleware = [];
+
+  config.jwt = {
+    secret: '123456',
+  };
+
+  config.cors = {
+    origin: '*',
+    allowMethods: 'GET,HEAD,PUT,POST,DELETE,PATCH,OPTION',
+  };
 
   // add your user config here
   const userConfig = {
