@@ -5,15 +5,31 @@ module.exports = app => {
 
   const User = app.model.define('user', {
     id: { type: INTEGER, primaryKey: true, autoIncrement: true },
-    nick_name: STRING(30),
-    password: STRING,
+    nick_name: {
+      type: STRING(30),
+      allowNull: false,
+    },
+    password: {
+      type: STRING,
+      allowNull: false,
+    },
     gender: INTEGER,
     email: STRING,
     last_sign_in_at: DATE,
-    created_at: DATE,
-    updated_at: DATE,
+    qq: STRING,
+    created_at: {
+      type: DATE,
+      defaultValue: () => new Date(),
+    },
+    updated_at: {
+      type: DATE,
+      defaultValue: () => new Date(),
+    },
+    level: {
+      type: INTEGER,
+      defaultValue: () => 0,
+    },
   });
 
   return User;
-
 };
