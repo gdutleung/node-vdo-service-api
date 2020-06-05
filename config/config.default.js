@@ -23,16 +23,16 @@ module.exports = appInfo => {
   config.keys = appInfo.name + '_1590897898510_6871';
 
   // add your middleware config here
-  config.middleware = [ 'jwtErr' ];
+  config.middleware = [ 'jwt' ];
 
   config.jwt = {
     secret: '123456',
   };
 
-  config.cors = {
-    origin: '*',
-    allowMethods: 'GET,HEAD,PUT,POST,DELETE,PATCH,OPTION',
-  };
+  // config.cors = {
+  //   origin: '*',
+  //   allowMethods: 'GET,HEAD,PUT,POST,DELETE,PATCH,OPTION',
+  // };
 
   // add your user config here
   const userConfig = {

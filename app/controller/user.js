@@ -54,10 +54,12 @@ class UserController extends Controller {
    * 查询用户信息
    */
   async getUserInfo() {
+
     const { state, service } = this.ctx;
+    console.log('-----------------', state);
     const { username, password } = state;
     const user = await service.user.findUser({ username, password });
-    console.log('------------', user);
+    // console.log('------------', user);
 
     this.ctx.status = 200;
     this.ctx.body = {
