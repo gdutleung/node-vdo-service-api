@@ -5,7 +5,7 @@ module.exports = app => {
 
   const User = app.model.define('user', {
     id: { type: INTEGER, primaryKey: true, autoIncrement: true },
-    nick_name: {
+    username: {
       type: STRING(30),
       allowNull: false,
     },
