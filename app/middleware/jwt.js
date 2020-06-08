@@ -56,7 +56,7 @@ module.exports = options => {
       }
     } else {
       // 不需要鉴权
-      next();
+      await next();
     }
   };
 };

@@ -25,7 +25,6 @@ class UserController extends Controller {
     const { username, password } = request.body;
 
     const res = await ctx.service.user.login({ username, password });
-    // console.log({ res });
 
     this.ctx.body = res;
     this.ctx.status = 200;
@@ -36,10 +35,10 @@ class UserController extends Controller {
   async getUserInfo() {
 
     const { state, service } = this.ctx;
-    console.log('-----------------', state);
     const { username, password } = state;
-    const user = await service.user.findUser({ username, password });
-    // console.log('------------', user);
+    const user = await service.user.findUser({
+      where: { username, password },
+    });
 
     this.ctx.status = 200;
     this.ctx.body = {

@@ -17,61 +17,50 @@ class UserService extends Service {
    * @param {*} loginData
    */
   async login(loginData) {
+    const { ctx } = this;
     const res = {};
     const { username, password } = loginData;
-    return await this.ctx.model.User.findOne({
+
+    // 在当前数据库中验证此用户思否存在
+    const queryResult = await ctx.model.User.findOne({
       where: {
         username,
-        password,
       },
     });
+    if (!queryResult) {
+      res.code = -2;
+      res.msg = '用户不存在，请前去注册';
+      res.status = 'failed';
+    } else {
+      const result = await ctx.model.User.findOne({
+        where: {
+          username,
+          password,
+        },
+      });
 
-    // if (result) {
-    //   res.code = 0;
-    //   res.data = result;
-    // } else {
-    //   res.code = -1;
-    // }
-    // 在当前数据库中验证此用户思否存在
-    // const queryResult = await ctx.model.User.findOne({
-    //   where: {
-    //     username,
-    //   },
-    // });
-    // if (!queryResult) {
-    //   res.code = -2;
-    //   res.msg = '用户不存在，请前去注册';
-    //   res.data = {};
-    //   res.status = 'failed';
-    // } else {
-    //   const result = await ctx.model.User.findOne({
-    //     where: {
-    //       username,
-    //       password,
-    //     },
-    //   });
+      if (!result) {
+        res.code = -1;
+        res.msg = '用户信息不正确';
+        res.status = 'failed';
+      } else {
+        // 签发token;
+        const token = JWT.sign(
+          {
+            username: result.username,
+          },
+          this.config.jwt.secret,
+          {
+            expiresIn: 60 * 60,
+          }
+        );
+        res.code = 1;
+        res.token = token;
+        res.status = 'ok';
+      }
+    }
 
-    //   if (!result) {
-    //     res.code = -1;
-    //     res.msg = '用户信息不正确';
-    //     res.data = {};
-    //     res.status = 'failed';
-    //   } else {
-    //     签发token
-    //     const token = JWT.sign({
-    //       username: result.username,
-    //     },
-    //     this.config.jwt.secret, {
-    //       expiresIn: 60 * 60,
-    //     });
-    //     res.data = result;
-    //     res.code = 1;
-    //     // res.token = token;
-    //     res.status = 'ok';
-    //   }
-    // }
-
-    // return res;
+    return res;
   }
   /**
    * 查找用户
