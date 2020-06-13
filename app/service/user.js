@@ -48,6 +48,7 @@ class UserService extends Service {
         const token = JWT.sign(
           {
             username: result.username,
+            password: result.password,
           },
           this.config.jwt.secret,
           {

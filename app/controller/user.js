@@ -1,6 +1,7 @@
 'use strict';
 
 const Controller = require('egg').Controller;
+const JWT = require('jsonwebtoken');
 
 class UserController extends Controller {
   /**
@@ -12,7 +13,7 @@ class UserController extends Controller {
     const entity = { username, password, gender, email, qq, avatar };
     const res = await ctx.service.user.register(entity);
     if (res) {
-      ctx.body = { code: 0, msg: '验证成功' };
+      ctx.body = { code: 0, msg: '注册成功' };
       ctx.status = 200;
     }
   }
@@ -33,17 +34,21 @@ class UserController extends Controller {
    * 查询用户信息
    */
   async getUserInfo() {
+    const { service } = this.ctx;
 
-    const { state, service } = this.ctx;
-    const { username, password } = state;
-    const user = await service.user.findUser({
-      where: { username, password },
-    });
+    const token = this.ctx.request.header.authorization;
+    const decode = JWT.verify(token, this.config.jwt.secret);
+
+    const { username, password } = decode;
+    console.log({ username, password });
+
+    const user = await service.user.findUser({ username, password });
 
     this.ctx.status = 200;
     this.ctx.body = {
       msg: 'ok',
       code: 0,
+      data: user,
     };
   }
 }

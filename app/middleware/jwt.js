@@ -5,7 +5,7 @@ const JWT = require('jsonwebtoken');
 // 不需要鉴权的白名单
 const tokenWhiteList = new Set([ '/user/login', '/user/register' ]);
 
-module.exports = options => {
+module.exports = (options) => {
   return async function(ctx, next) {
     const token = ctx.request.header.authorization;
     // const method = ctx.method.toLowerCase();
@@ -20,7 +20,7 @@ module.exports = options => {
             !decode ||
             !decode.username ||
             !decode.password ||
-            !decode.expire
+            !decode.exp
           ) {
             ctx.status = 200;
             ctx.body = {
@@ -28,7 +28,7 @@ module.exports = options => {
               msg: '用户信息校验失败',
               isError: true,
             };
-          } else if (Date.now() - decode.expire > 0) {
+          } else if (Date.now() / 1000 - decode.exp > 0) {
             ctx.status = 200;
             ctx.body = {
               code: -1,
@@ -36,7 +36,7 @@ module.exports = options => {
               isError: true,
             };
           } else {
-            next();
+            await next();
           }
         } catch (error) {
           ctx.status = 200;
